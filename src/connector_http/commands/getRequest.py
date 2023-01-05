@@ -9,16 +9,22 @@ class GetRequest:
         url: str,
         headers: Optional[Dict[str, str]],
         params: Optional[Dict[str, str]],
-        auth: Optional[Tuple[str, str]]
+        basic_auth_username: Optional[str],
+        basic_auth_password: Optional[str],
     ):
         self.url = url
         self.headers = headers or {}
         self.params = params or {}
-        self.auth = tuple(auth) if auth is not None else None
+        self.basic_auth_username = basic_auth_username
+        self.basic_auth_password = basic_auth_password
 
     def execute(self, config, task_data):
+        auth = None
+        if self.basic_auth_username is not None and self.basic_auth_password is not None:
+            auth = (self.basic_auth_username, self.basic_auth_password)
+
         try:
-            response = requests.get(self.url, self.params, headers=self.headers, auth=self.auth)
+            response = requests.get(self.url, self.params, headers=self.headers, auth=auth)
 
             return {
                 "response": response.text,
