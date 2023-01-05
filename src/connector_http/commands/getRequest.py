@@ -14,13 +14,21 @@ class GetRequest:
         self.url = url
         self.headers = headers or {}
         self.params = params or {}
-        self.auth = auth
+        self.auth = tuple(auth) if auth is not None else None
 
     def execute(self, config, task_data):
-        response = requests.get(self.url, self.params, headers=self.headers, auth=self.auth)
+        try:
+            response = requests.get(self.url, self.params, headers=self.headers, auth=self.auth)
 
-        return {
-            "response": response.text,
-            "status": response.status_code,
-            "mimetype": "application/json",
-        }
+            return {
+                "response": response.text,
+                "status": response.status_code,
+                "mimetype": "application/json",
+            }
+        except Exception as e:
+            return {
+                "response": f'{"error": {e}}',
+                "status": 500,
+                "mimetype": "application/json",
+            }
+
