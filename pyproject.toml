@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "connector_http", from = "src" }]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.9"
 requests = "^2.28.1"
 
 
