@@ -7,10 +7,10 @@ from typing import Tuple
 class GetRequest:
     def __init__(self,
         url: str,
-        headers: Optional[Dict[str, str]],
-        params: Optional[Dict[str, str]],
-        basic_auth_username: Optional[str],
-        basic_auth_password: Optional[str],
+        headers: Optional[Dict[str, str]] = None,
+        params: Optional[Dict[str, str]] = None,
+        basic_auth_username: Optional[str] = None,
+        basic_auth_password: Optional[str] = None,
     ):
         self.url = url
         self.headers = headers or {}
