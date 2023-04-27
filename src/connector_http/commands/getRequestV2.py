@@ -14,7 +14,7 @@ class GetRequestV2:
         params: Optional[Dict[str, str]] = None,
         basic_auth_username: Optional[str] = None,
         basic_auth_password: Optional[str] = None,
-        retry_attempts: Optional[int] = None,
+        attempts: Optional[int] = None,
     ):
         self.url = url
         self.headers = headers or {}
@@ -22,10 +22,10 @@ class GetRequestV2:
         self.basic_auth_username = basic_auth_username
         self.basic_auth_password = basic_auth_password
 
-        if not isinstance(retry_attempts, int) or retry_attempts < 0 or retry_attempts > 10:
-            retry_attempts = 1
+        if not isinstance(attempts, int) or attempts < 1 or attempts > 10:
+            attempts = 1
         
-        self.retry_attempts = retry_attempts
+        self.attempts = attempts
 
     def execute(self, config, task_data):
         logs = []
@@ -38,23 +38,21 @@ class GetRequestV2:
         mimetype = "application/json"
 
         log(f"Will execute")
-        log("Will check auth")
         
         auth = None
         if self.basic_auth_username is not None and self.basic_auth_password is not None:
             auth = (self.basic_auth_username, self.basic_auth_password)
             log("Set auth")
 
-        log("Did check auth")
-
         attempt = 1
 
-        while attempt <= self.retry_attempts:
+        while attempt <= self.attempts:
             status = None
             if attempt > 1:
+                log("Sleeping before next attempt")
                 time.sleep(1)
             
-            log(f"Will attempt {attempt} of {self.retry_attempts}")
+            log(f"Will attempt {attempt} of {self.attempts}")
             api_response = None
             
             try:
@@ -72,7 +70,7 @@ class GetRequestV2:
                 if status is None:
                     status = 500
             finally:
-                log(f"Did attempt {attempt} of {self.retry_attempts}")
+                log(f"Did attempt {attempt} of {self.attempts}")
 
             if status // 100 != 5:
                 break
@@ -83,7 +81,7 @@ class GetRequestV2:
         
         result = {
             "response": {
-                "response": response,
+                "api_response": response,
                 "spiff__logs": logs,
             },
             "status": status,
