@@ -49,7 +49,7 @@ class PostRequestV2:
             log(f"Did parse response")
         except Exception as e:
             log(f"Did catch exception: {e}")
-            if response is None:
+            if len(response) == 0:
                 response = f'{"error": {e}, "raw_response": {api_response.text}}',
             if status == 0:
                 status = 500
