@@ -1,4 +1,6 @@
+import json
 import requests
+import time
 
 from typing import Any
 from typing import Dict
@@ -20,22 +22,46 @@ class PostRequestV2:
         self.data = data
 
     def execute(self, config, task_data):
+        logs = []
+
+        def log(msg):
+            logs.append(f"[{time.time()}] {msg}")
+
+        response = {}
+        status = 0
+        mimetype = "application/json"
+
+        log(f"Will execute")
+
         auth = None
         if self.basic_auth_username is not None and self.basic_auth_password is not None:
             auth = (self.basic_auth_username, self.basic_auth_password)
 
         try:
-            response = requests.post(self.url, headers=self.headers, auth=auth, json=self.data)
-
-            return {
-                "response": response.text,
-                "status": response.status_code,
-                "mimetype": "application/json",
-            }
+            log(f"Will call {self.url}")
+            api_response = requests.post(self.url, headers=self.headers, auth=auth, json=self.data)
+            log(f"Did call {self.url}")
+                
+            log(f"Will parse response")
+            status = api_response.status_code
+            response = json.loads(api_response.text)
+            log(f"Did parse response")
         except Exception as e:
-            return {
-                "response": f'{"error": {e}}',
-                "status": 500,
-                "mimetype": "application/json",
-            }
+            log(f"Did catch exception: {e}")
+            if response is None:
+                response = f'{"error": {e}, "raw_response": {api_response.text}}',
+            if status == 0:
+                status = 500
+        finally:
+            log("Did execute")
 
+        result = {
+            "response": {
+                "api_response": response,
+                "spiff__logs": logs,
+            },
+            "status": status,
+            "mimetype": mimetype,
+        }
+
+        return result

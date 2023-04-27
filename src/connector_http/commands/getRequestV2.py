@@ -33,10 +33,6 @@ class GetRequestV2:
         def log(msg):
             logs.append(f"[{time.time()}] {msg}")
 
-        response = {}
-        status = 0
-        mimetype = "application/json"
-
         log(f"Will execute")
         
         auth = None
@@ -47,7 +43,10 @@ class GetRequestV2:
         attempt = 1
 
         while attempt <= self.attempts:
-            status = None
+            response = {}
+            status = 0
+            mimetype = "application/json"
+
             if attempt > 1:
                 log("Sleeping before next attempt")
                 time.sleep(1)
@@ -66,8 +65,9 @@ class GetRequestV2:
                 log(f"Did parse response")
             except Exception as e:
                 log(f"Did catch exception: {e}")
-                response = f'{"error": {e}}',
-                if status is None:
+                if response is None:
+                    response = f'{"error": {e}, "raw_response": {api_response.text}}',
+                if status == 0:
                     status = 500
             finally:
                 log(f"Did attempt {attempt} of {self.attempts}")
