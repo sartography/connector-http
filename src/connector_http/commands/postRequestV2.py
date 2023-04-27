@@ -36,6 +36,7 @@ class PostRequestV2:
         auth = None
         if self.basic_auth_username is not None and self.basic_auth_password is not None:
             auth = (self.basic_auth_username, self.basic_auth_password)
+            log("Set auth")
 
         try:
             log(f"Will call {self.url}")
