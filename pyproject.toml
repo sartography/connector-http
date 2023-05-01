@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "connector-http"
-version = "0.1.0"
+version = "0.2.0"
 description = "Make HTTP Requests available to SpiffWorkflow Service Tasks"
 authors = ["Jon Herron <jon.herron@yahoo.com>"]
 readme = "README.md"
@@ -8,7 +8,7 @@ packages = [{include = "connector_http", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-requests = "^2.28.1"
+requests = "^2.28.2"
 
 
 [build-system]
