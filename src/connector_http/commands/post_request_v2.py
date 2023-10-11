@@ -1,19 +1,17 @@
 import json
-import requests
 import time
-
 from typing import Any
-from typing import Dict
-from typing import Optional
-from typing import Tuple
+
+import requests
+
 
 class PostRequestV2:
     def __init__(self,
         url: str,
-        headers: Optional[Dict[str, str]],
-        basic_auth_username: Optional[str],
-        basic_auth_password: Optional[str],
-        data: Optional[Dict[str, Any]],
+        headers: dict[str, str] | None = None,
+        basic_auth_username: str | None = None,
+        basic_auth_password: str | None = None,
+        data: dict[str, Any] | None = None,
     ):
         self.url = url
         self.headers = headers or {}
@@ -31,22 +29,22 @@ class PostRequestV2:
         status = 0
         mimetype = "application/json"
 
-        log(f"Will execute")
+        log("Will execute")
 
         auth = None
         if self.basic_auth_username is not None and self.basic_auth_password is not None:
             auth = (self.basic_auth_username, self.basic_auth_password)
-            log("Set auth")
+            log("basic auth has been set")
 
         try:
-            log(f"Will call {self.url}")
-            api_response = requests.post(self.url, headers=self.headers, auth=auth, json=self.data)
+            log(f"Will call {self.url} with data {self.data}")
+            api_response = requests.post(self.url, headers=self.headers, auth=auth, json=self.data, timeout=300)
             log(f"Did call {self.url}")
-                
-            log(f"Will parse response")
+
+            log(f"Will parse response with status code {api_response.status_code}")
             status = api_response.status_code
-            response = json.loads(api_response.text)
-            log(f"Did parse response")
+            response = json.loads(api_response.text) if api_response.text else {}
+            log("Did parse response")
         except Exception as e:
             log(f"Did catch exception: {e}")
             if len(response) == 0:

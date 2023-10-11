@@ -3,18 +3,15 @@ import time
 
 import requests
 
-from typing import Dict
-from typing import Optional
-from typing import Tuple
 
 class GetRequestV2:
     def __init__(self,
         url: str,
-        headers: Optional[Dict[str, str]] = None,
-        params: Optional[Dict[str, str]] = None,
-        basic_auth_username: Optional[str] = None,
-        basic_auth_password: Optional[str] = None,
-        attempts: Optional[int] = None,
+        headers: dict[str, str] | None = None,
+        params: dict[str, str] | None = None,
+        basic_auth_username: str | None = None,
+        basic_auth_password: str | None = None,
+        attempts: int | None = None,
     ):
         self.url = url
         self.headers = headers or {}
@@ -24,7 +21,7 @@ class GetRequestV2:
 
         if not isinstance(attempts, int) or attempts < 1 or attempts > 10:
             attempts = 1
-        
+
         self.attempts = attempts
 
     def execute(self, config, task_data):
@@ -33,8 +30,8 @@ class GetRequestV2:
         def log(msg):
             logs.append(f"[{time.time()}] {msg}")
 
-        log(f"Will execute")
-        
+        log("Will execute")
+
         auth = None
         if self.basic_auth_username is not None and self.basic_auth_password is not None:
             auth = (self.basic_auth_username, self.basic_auth_password)
@@ -50,19 +47,19 @@ class GetRequestV2:
             if attempt > 1:
                 log("Sleeping before next attempt")
                 time.sleep(1)
-            
+
             log(f"Will attempt {attempt} of {self.attempts}")
             api_response = None
-            
+
             try:
                 log(f"Will call {self.url}")
-                api_response = requests.get(self.url, self.params, headers=self.headers, auth=auth)
+                api_response = requests.get(self.url, self.params, headers=self.headers, auth=auth, timeout=300)
                 log(f"Did call {self.url}")
-                
-                log(f"Will parse response")
+
+                log("Will parse response")
                 status = api_response.status_code
                 response = json.loads(api_response.text)
-                log(f"Did parse response")
+                log("Did parse response")
             except Exception as e:
                 log(f"Did catch exception: {e}")
                 if len(response) == 0:
@@ -78,7 +75,7 @@ class GetRequestV2:
             attempt += 1
 
         log("Did execute")
-        
+
         result = {
             "response": {
                 "api_response": response,

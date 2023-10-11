@@ -1,17 +1,15 @@
+from typing import Any
+
 import requests
 
-from typing import Any
-from typing import Dict
-from typing import Optional
-from typing import Tuple
 
 class PostRequest:
     def __init__(self,
         url: str,
-        headers: Optional[Dict[str, str]],
-        basic_auth_username: Optional[str],
-        basic_auth_password: Optional[str],
-        data: Optional[Dict[str, Any]],
+        headers: dict[str, str] | None,
+        basic_auth_username: str | None,
+        basic_auth_password: str | None,
+        data: dict[str, Any] | None,
     ):
         self.url = url
         self.headers = headers or {}
@@ -25,7 +23,7 @@ class PostRequest:
             auth = (self.basic_auth_username, self.basic_auth_password)
 
         try:
-            response = requests.post(self.url, headers=self.headers, auth=auth, json=self.data)
+            response = requests.post(self.url, headers=self.headers, auth=auth, json=self.data, timeout=300)
 
             return {
                 "response": response.text,
