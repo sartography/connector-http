@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "connector-http"
-version = "0.2.0"
+version = "1.0.0"
 description = "Make HTTP Requests available to SpiffWorkflow Service Tasks"
 authors = ["Jon Herron <jon.herron@yahoo.com>"]
 readme = "README.md"
@@ -9,6 +9,9 @@ packages = [{include = "connector_http", from = "src" }]
 [tool.poetry.dependencies]
 python = "^3.9"
 requests = "^2.28.2"
+spiffworkflow-connector-command = {git = "https://github.com/sartography/spiffworkflow-connector-command.git", rev = "main"}
+# spiffworkflow-connector-command = {develop = true, path = "../spiffworkflow-connector-command"}
+
 
 
 [tool.poetry.group.dev.dependencies]

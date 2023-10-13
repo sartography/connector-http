@@ -310,6 +310,25 @@ files = [
 ]
 
 [[package]]
+name = "spiffworkflow-connector-command"
+version = "0.2.0"
+description = "Make HTTP Requests available to SpiffWorkflow Service Tasks"
+optional = false
+python-versions = "^3.9"
+files = []
+develop = false
+
+[package.dependencies]
+requests = "^2.28.2"
+typing-extensions = "^4.8.0"
+
+[package.source]
+type = "git"
+url = "https://github.com/sartography/spiffworkflow-connector-command.git"
+reference = "main"
+resolved_reference = "88bcbafdb1ffbf3f85fa9f13e05e41ace48b0988"
+
+[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -351,4 +370,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "731eb1f75f491b8d8588d03b91d010b5a11f344d45c933aeeee1d478d3b7d7d5"
+content-hash = "8c6425b085e3770b1f16ab27d7a59d79d841040dc3125f2be8eece93d6ffd25a"
