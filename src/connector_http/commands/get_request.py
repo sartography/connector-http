@@ -1,8 +1,12 @@
 
-import requests
+from typing import Any
+
+import requests  # type: ignore
+from spiffworkflow_connector_command.command_interface import CommandResultDictV1
+from spiffworkflow_connector_command.command_interface import ConnectorCommand
 
 
-class GetRequest:
+class GetRequest(ConnectorCommand):
     def __init__(self,
         url: str,
         headers: dict[str, str] | None = None,
@@ -16,7 +20,7 @@ class GetRequest:
         self.basic_auth_username = basic_auth_username
         self.basic_auth_password = basic_auth_password
 
-    def execute(self, config, task_data):
+    def execute(self, _config: Any, _task_data: Any) -> CommandResultDictV1:
         auth = None
         if self.basic_auth_username is not None and self.basic_auth_password is not None:
             auth = (self.basic_auth_username, self.basic_auth_password)

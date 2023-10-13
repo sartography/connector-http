@@ -1,6 +1,7 @@
-import pytest
 import time
 from typing import Any
+
+import pytest
 
 
 @pytest.fixture
