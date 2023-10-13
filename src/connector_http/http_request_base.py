@@ -25,15 +25,15 @@ class HttpRequestBase:
 
     def _create_error_from_exception(self, exception: Exception, http_response: requests.Response | None) -> CommandErrorDict:
         return self._create_error(
-            error_name=exception.__class__.__name__, http_response=http_response, additional_message=str(exception)
+            error_code=exception.__class__.__name__, http_response=http_response, additional_message=str(exception)
         )
 
     def _create_error(
-        self, error_name: str, http_response: requests.Response | None, additional_message: str = ""
+        self, error_code: str, http_response: requests.Response | None, additional_message: str = ""
     ) -> CommandErrorDict:
         raw_response = http_response.text if http_response is not None else None
         message = f"Received Error: {additional_message}. Raw http_response was: {raw_response}"
-        error: CommandErrorDict = {"error_name": error_name, "message": message}
+        error: CommandErrorDict = {"error_code": error_code, "message": message}
         return error
 
     def run_request(self, request_function: Callable) -> CommandResultDictV2:
@@ -100,7 +100,7 @@ class HttpRequestBase:
             log("Did parse http_response")
 
         if status >= 400 and error is None:
-            error = self._create_error(error_name=f"HttpError{status}", http_response=http_response)
+            error = self._create_error(error_code=f"HttpError{status}", http_response=http_response)
 
         return_response: ConnectorProxyResponseDict = {
             "command_response": command_response,
