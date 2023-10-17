@@ -20,6 +20,9 @@ class GetRequest(ConnectorCommand):
         self.basic_auth_username = basic_auth_username
         self.basic_auth_password = basic_auth_password
 
+    # backend
+    #   spiffworkflow-proxy
+    #     GetRequest returns CommandResultDictV1
     def execute(self, _config: Any, _task_data: Any) -> CommandResultDictV1:
         auth = None
         if self.basic_auth_username is not None and self.basic_auth_password is not None:

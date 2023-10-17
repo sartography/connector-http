@@ -4,7 +4,7 @@ from collections.abc import Callable
 
 import requests  # type: ignore
 from spiffworkflow_connector_command.command_interface import CommandErrorDict
-from spiffworkflow_connector_command.command_interface import CommandResultDictV2
+from spiffworkflow_connector_command.command_interface import CommandResponseDict
 from spiffworkflow_connector_command.command_interface import ConnectorProxyResponseDict
 
 
@@ -36,7 +36,7 @@ class HttpRequestBase:
         error: CommandErrorDict = {"error_code": error_code, "message": message}
         return error
 
-    def run_request(self, request_function: Callable) -> CommandResultDictV2:
+    def run_request(self, request_function: Callable) -> ConnectorProxyResponseDict:
         logs = []
 
         def log(msg: str) -> None:
@@ -102,15 +102,16 @@ class HttpRequestBase:
         if status >= 400 and error is None:
             error = self._create_error(error_code=f"HttpError{status}", http_response=http_response)
 
-        return_response: ConnectorProxyResponseDict = {
-            "command_response": command_response,
-            "spiff__logs": logs,
-            "error": error,
-        }
-        result: CommandResultDictV2 = {
-            "response": return_response,
-            "status": status,
+        return_response: CommandResponseDict = {
+            "body": json.dumps(command_response),
             "mimetype": mimetype,
+            "http_status": status,
+        }
+        result: ConnectorProxyResponseDict = {
+            "command_response": return_response,
+            "error": error,
+            "command_response_version": 2,
+            "spiff__logs": logs,
         }
 
         return result
