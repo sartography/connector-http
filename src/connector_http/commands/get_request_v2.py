@@ -9,9 +9,14 @@ from connector_http.http_request_base import HttpRequestBase
 
 class GetRequestV2(ConnectorCommand, HttpRequestBase):
     def __init__(self,
-        attempts: int | None = None, **kwargs: Any
+        url: str,
+        headers: dict[str, str] | None = None,
+        params: dict[str, str] | None = None,
+        basic_auth_username: str | None = None,
+        basic_auth_password: str | None = None,
+        attempts: int | None = None,
     ):
-        HttpRequestBase.__init__(self, **kwargs)
+        HttpRequestBase.__init__(self, url=url, headers=headers, params=params, basic_auth_username=basic_auth_username, basic_auth_password=basic_auth_password)
         if not isinstance(attempts, int) or attempts < 1 or attempts > 10:
             attempts = 1
         self.attempts = attempts
