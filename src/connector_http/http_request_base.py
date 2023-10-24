@@ -12,16 +12,17 @@ class HttpRequestBase:
     def __init__(self,
         url: str,
         headers: dict[str, str] | None = None,
-        params: dict[str, str] | None = None,
         basic_auth_username: str | None = None,
         basic_auth_password: str | None = None,
     ):
         self.url = url
         self.headers = headers or {}
-        self.params = params or {}
         self.basic_auth_username = basic_auth_username
         self.basic_auth_password = basic_auth_password
         self.attempts = 1
+
+        self.params: dict | None = None
+        self.data: dict | None = None
 
     def _create_error_from_exception(self, exception: Exception, http_response: requests.Response | None) -> CommandErrorDict:
         return self._create_error(
@@ -68,7 +69,17 @@ class HttpRequestBase:
 
             try:
                 log(f"Will call {self.url}")
-                http_response = request_function(self.url, self.params, headers=self.headers, auth=auth, timeout=300)
+                arguments = {
+                    "url": self.url,
+                    "headers": self.headers,
+                    "auth": auth,
+                    "timeout": 300,
+                }
+                if self.params is not None:
+                    arguments["params"] = self.params
+                if self.data is not None:
+                    arguments["json"] = self.data
+                http_response = request_function(**arguments)
                 log(f"Did call {self.url}")
 
                 log("Will parse http_response")
