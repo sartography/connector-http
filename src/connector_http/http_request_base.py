@@ -9,7 +9,8 @@ from spiffworkflow_connector_command.command_interface import ConnectorProxyResp
 
 
 class HttpRequestBase:
-    def __init__(self,
+    def __init__(
+        self,
         url: str,
         headers: dict[str, str] | None = None,
         basic_auth_username: str | None = None,
@@ -103,7 +104,7 @@ class HttpRequestBase:
         if http_response is not None:
             command_response = {"raw_response": http_response.text}
             # this string can include modifiers like UTF-8, which is why it's not using ==
-            if 'application/json' in http_response.headers.get('Content-Type', ''):
+            if "application/json" in http_response.headers.get("Content-Type", ""):
                 try:
                     command_response = json.loads(http_response.text)
                 except Exception as e:
