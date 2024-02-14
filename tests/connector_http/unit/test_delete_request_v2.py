@@ -2,12 +2,12 @@ import json
 from typing import Any
 from unittest.mock import patch
 
-from connector_http.commands.delete_request import DeleteRequest
+from connector_http.commands.delete_request_v2 import DeleteRequestV2
 
 
-class TestDeleteRequest:
+class TestDeleteRequestV2:
     def test_delete_html_from_url(self) -> None:
-        request = DeleteRequest(url="http://example.com")
+        request = DeleteRequestV2(url="http://example.com")
         return_html = "<html>Hey</html>"
         with patch("requests.delete") as mock_request:
             mock_request.return_value.status_code = 200
@@ -24,7 +24,7 @@ class TestDeleteRequest:
         assert len(response["spiff__logs"]) > 0
 
     def test_delete_json_from_url(self) -> None:
-        request = DeleteRequest(url="http://example.com")
+        request = DeleteRequestV2(url="http://example.com")
         return_json = {"hey": "we_return"}
         with patch("requests.delete") as mock_request:
             mock_request.return_value.status_code = 200
@@ -43,7 +43,7 @@ class TestDeleteRequest:
         assert len(response["spiff__logs"]) > 0
 
     def test_delete_can_handle_500(self, sleepless: Any) -> None:
-        request = DeleteRequest(url="http://example.com")
+        request = DeleteRequestV2(url="http://example.com")
         return_json = {"error": "we_did_error"}
         with patch("requests.delete") as mock_request:
             mock_request.return_value.status_code = 500

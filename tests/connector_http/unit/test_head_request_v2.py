@@ -2,12 +2,12 @@ import json
 from typing import Any
 from unittest.mock import patch
 
-from connector_http.commands.head_request import HeadRequest
+from connector_http.commands.head_request_v2 import HeadRequestV2
 
 
-class TestHeadRequest:
+class TestHeadRequestV2:
     def test_head_html_from_url(self) -> None:
-        request = HeadRequest(url="http://example.com")
+        request = HeadRequestV2(url="http://example.com")
         return_html = "<html>Hey</html>"
         with patch("requests.head") as mock_request:
             mock_request.return_value.status_code = 200
@@ -24,7 +24,7 @@ class TestHeadRequest:
         assert len(response["spiff__logs"]) > 0
 
     def test_head_json_from_url(self) -> None:
-        request = HeadRequest(url="http://example.com")
+        request = HeadRequestV2(url="http://example.com")
         return_json = {"hey": "we_return"}
         with patch("requests.head") as mock_request:
             mock_request.return_value.status_code = 200
@@ -42,7 +42,7 @@ class TestHeadRequest:
         assert len(response["spiff__logs"]) > 0
 
     def test_head_can_handle_500(self, sleepless: Any) -> None:
-        request = HeadRequest(url="http://example.com", attempts=3)
+        request = HeadRequestV2(url="http://example.com", attempts=3)
         return_json = {"error": "we_did_error"}
         with patch("requests.head") as mock_request:
             mock_request.return_value.status_code = 500

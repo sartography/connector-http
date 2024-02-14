@@ -2,12 +2,12 @@ import json
 from typing import Any
 from unittest.mock import patch
 
-from connector_http.commands.put_request import PutRequest
+from connector_http.commands.put_request_v2 import PutRequestV2
 
 
-class TestPutRequest:
+class TestPutRequestV2:
     def test_put_html_from_url(self) -> None:
-        request = PutRequest(url="http://example.com")
+        request = PutRequestV2(url="http://example.com")
         return_html = "<html>Hey</html>"
         with patch("requests.put") as mock_request:
             mock_request.return_value.status_code = 200
@@ -24,7 +24,7 @@ class TestPutRequest:
         assert len(response["spiff__logs"]) > 0
 
     def test_put_json_from_url(self) -> None:
-        request = PutRequest(url="http://example.com")
+        request = PutRequestV2(url="http://example.com")
         return_json = {"hey": "we_return"}
         with patch("requests.put") as mock_request:
             mock_request.return_value.status_code = 200
@@ -43,7 +43,7 @@ class TestPutRequest:
         assert len(response["spiff__logs"]) > 0
 
     def test_put_can_handle_500(self, sleepless: Any) -> None:
-        request = PutRequest(url="http://example.com")
+        request = PutRequestV2(url="http://example.com")
         return_json = {"error": "we_did_error"}
         with patch("requests.put") as mock_request:
             mock_request.return_value.status_code = 500
