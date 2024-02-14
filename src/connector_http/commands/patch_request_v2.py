@@ -7,7 +7,7 @@ from spiffworkflow_connector_command.command_interface import ConnectorProxyResp
 from connector_http.http_request_base import HttpRequestBase
 
 
-class PatchRequest(ConnectorCommand, HttpRequestBase):
+class PatchRequestV2(ConnectorCommand, HttpRequestBase):
     def __init__(
         self,
         url: str,

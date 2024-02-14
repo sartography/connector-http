@@ -2,12 +2,12 @@ import json
 from typing import Any
 from unittest.mock import patch
 
-from connector_http.commands.patch_request import PatchRequest
+from connector_http.commands.patch_request_v2 import PatchRequestV2
 
 
-class TestPatchRequest:
+class TestPatchRequestV2:
     def test_patch_html_from_url(self) -> None:
-        request = PatchRequest(url="http://example.com")
+        request = PatchRequestV2(url="http://example.com")
         return_html = "<html>Hey</html>"
         with patch("requests.patch") as mock_request:
             mock_request.return_value.status_code = 200
@@ -24,7 +24,7 @@ class TestPatchRequest:
         assert len(response["spiff__logs"]) > 0
 
     def test_patch_json_from_url(self) -> None:
-        request = PatchRequest(url="http://example.com")
+        request = PatchRequestV2(url="http://example.com")
         return_json = {"hey": "we_return"}
         with patch("requests.patch") as mock_request:
             mock_request.return_value.status_code = 200
@@ -43,7 +43,7 @@ class TestPatchRequest:
         assert len(response["spiff__logs"]) > 0
 
     def test_patch_can_handle_500(self, sleepless: Any) -> None:
-        request = PatchRequest(url="http://example.com")
+        request = PatchRequestV2(url="http://example.com")
         return_json = {"error": "we_did_error"}
         with patch("requests.patch") as mock_request:
             mock_request.return_value.status_code = 500
