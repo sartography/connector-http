@@ -7,7 +7,7 @@ from spiffworkflow_connector_command.command_interface import ConnectorProxyResp
 from connector_http.http_request_base import HttpRequestBase
 
 
-class PostRequestV2(ConnectorCommand, HttpRequestBase):
+class PutRequest(ConnectorCommand, HttpRequestBase):
     def __init__(
         self,
         url: str,
@@ -23,4 +23,4 @@ class PostRequestV2(ConnectorCommand, HttpRequestBase):
         self.data = data or {}
 
     def execute(self, _config: Any, _task_data: dict) -> ConnectorProxyResponseDict:
-        return self.run_request(requests.post)
+        return self.run_request(requests.put)
