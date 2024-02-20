@@ -104,13 +104,14 @@ class HttpRequestBase:
 
         if http_response is not None:
             command_response = {"raw_response": http_response.text}
+            content_type = http_response.headers.get("Content-Type", "")
             # this string can include modifiers like UTF-8, which is why it's not using ==
-            if "application/json" in http_response.headers.get("Content-Type", ""):
+            if "application/json" in content_type:
                 try:
                     command_response = json.loads(http_response.text)
                 except Exception as e:
                     error = self._create_error_from_exception(exception=e, http_response=http_response)
-            elif "application/xml" in http_response.headers.get("Content-Type", ""):
+            elif "application/xml" in content_type or "text/xml" in content_type:
                 try:
                     command_response = xmltodict.parse(http_response.text)
                 except Exception as e:
@@ -121,7 +122,7 @@ class HttpRequestBase:
             error = self._create_error(error_code=f"HttpError{status}", http_response=http_response)
 
         return_response: CommandResponseDict = {
-            "body": json.dumps(command_response),
+            "body": command_response,
             "mimetype": mimetype,
             "http_status": status,
         }
