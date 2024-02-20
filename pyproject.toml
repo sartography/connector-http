@@ -11,6 +11,7 @@ python = "^3.9"
 requests = "^2.28.2"
 spiffworkflow-connector-command = {git = "https://github.com/sartography/spiffworkflow-connector-command.git", rev = "main"}
 # spiffworkflow-connector-command = {develop = true, path = "../spiffworkflow-connector-command"}
+xmltodict = "^0.13.0"
 
 
 

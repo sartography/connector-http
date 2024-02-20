@@ -1,5 +1,6 @@
 import json
 import time
+import xmltodict
 from collections.abc import Callable
 
 import requests  # type: ignore
@@ -107,6 +108,11 @@ class HttpRequestBase:
             if "application/json" in http_response.headers.get("Content-Type", ""):
                 try:
                     command_response = json.loads(http_response.text)
+                except Exception as e:
+                    error = self._create_error_from_exception(exception=e, http_response=http_response)
+            elif "application/xml" in http_response.headers.get("Content-Type", ""):
+                try:
+                    command_response = xmltodict.parse(http_response.text)
                 except Exception as e:
                     error = self._create_error_from_exception(exception=e, http_response=http_response)
             log("Did parse http_response")
