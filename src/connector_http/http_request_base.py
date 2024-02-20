@@ -1,9 +1,9 @@
 import json
 import time
-import xmltodict
 from collections.abc import Callable
 
 import requests  # type: ignore
+import xmltodict
 from spiffworkflow_connector_command.command_interface import CommandErrorDict
 from spiffworkflow_connector_command.command_interface import CommandResponseDict
 from spiffworkflow_connector_command.command_interface import ConnectorProxyResponseDict
