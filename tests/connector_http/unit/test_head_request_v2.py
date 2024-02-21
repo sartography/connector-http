@@ -16,7 +16,7 @@ class TestHeadRequestV2:
             response = request.execute(None, {})
 
         assert response is not None
-        assert response["command_response"]["body"] == json.dumps({"raw_response": return_html})
+        assert response["command_response"]["body"] == {"raw_response": return_html}
         assert response["command_response"]["http_status"] == 200
         assert response["command_response"]["mimetype"] == "application/json"
         assert response["error"] is None
@@ -34,7 +34,7 @@ class TestHeadRequestV2:
             response = request.execute(None, {})
 
         assert response is not None
-        assert response["command_response"]["body"] == json.dumps(return_json)
+        assert response["command_response"]["body"] == return_json
         assert response["command_response"]["http_status"] == 200
         assert response["command_response"]["mimetype"] == "application/json"
         assert response["error"] is None
@@ -52,7 +52,7 @@ class TestHeadRequestV2:
             assert mock_request.call_count == 3
 
         assert response is not None
-        assert response["command_response"]["body"] == json.dumps(return_json)
+        assert response["command_response"]["body"] == return_json
         assert response["command_response"]["http_status"] == 500
         assert response["command_response"]["mimetype"] == "application/json"
         assert response["error"] is not None
