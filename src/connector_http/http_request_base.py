@@ -81,7 +81,11 @@ class HttpRequestBase:
                 if self.params is not None:
                     arguments["params"] = self.params
                 if self.data is not None:
-                    if not arguments["headers"].keys().include("Content-Type", "Content-type"):
+                    if (
+                        "Content-Type" not in self.headers
+                        and "Content-type" not in self.headers
+                        and "content-type" not in self.headers
+                    ):
                         arguments["headers"]["Content-Type"] = "application/json"
                     arguments["json"] = self.data
                 http_response = request_function(**arguments)
