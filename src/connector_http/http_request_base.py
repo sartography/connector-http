@@ -1,6 +1,7 @@
 import json
 import time
 from collections.abc import Callable
+from typing import Any
 
 import requests  # type: ignore
 import xmltodict
@@ -71,7 +72,7 @@ class HttpRequestBase:
 
             try:
                 log(f"Will call {self.url}")
-                arguments = {
+                arguments: dict[str, Any] = {
                     "url": self.url,
                     "headers": self.headers,
                     "auth": auth,
@@ -80,6 +81,12 @@ class HttpRequestBase:
                 if self.params is not None:
                     arguments["params"] = self.params
                 if self.data is not None:
+                    if (
+                        "Content-Type" not in self.headers
+                        and "Content-type" not in self.headers
+                        and "content-type" not in self.headers
+                    ):
+                        arguments["headers"]["Content-Type"] = "application/json"
                     arguments["json"] = self.data
                 http_response = request_function(**arguments)
                 log(f"Did call {self.url}")
